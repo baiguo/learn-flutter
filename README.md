@@ -18,6 +18,12 @@
 ```
 google()
 jcenter()
-
 ```
 
+改为阿里云镜像
+
+```
+maven { url 'https://maven.aliyun.com/repository/google' }
+maven { url 'https://maven.aliyun.com/repository/jcenter' }
+maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+```
