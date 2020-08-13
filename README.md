@@ -1,4 +1,4 @@
-# FQ(常见问题总结)
+# FQ(Flutter常见问题总结)
 
 ## 1.app_plugin_loader.gradle' as it does not exist
 
