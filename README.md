@@ -27,3 +27,32 @@ maven { url 'https://maven.aliyun.com/repository/google' }
 maven { url 'https://maven.aliyun.com/repository/jcenter' }
 maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
 ```
+
+
+## 3. ios混合工程 Exception: MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+需要进行手动把flutter使用的模块注册下
+```
+@implementation FlutterNativePlugin
++ (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
+  [FLTDeviceInfoPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTDeviceInfoPlugin"]];
+  [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
+  [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
+  [LaunchReviewPlugin registerWithRegistrar:[registry registrarForPlugin:@"LaunchReviewPlugin"]];
+  [FLTPackageInfoPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPackageInfoPlugin"]];
+  [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
+  [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
+  [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
+  [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
+  [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];
+  [FLTWebViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTWebViewFlutterPlugin"]];
+}
+```
+```
+    FlutterViewController *flutterViewController = [[FlutterViewController alloc] init];
+    self.mUINavigationController = [[UINavigationController alloc] init];
+    [self.mUINavigationController pushViewController:flutterViewController animated:YES];
+    [GeneratedPluginRegistrant registerWithRegistry:flutterViewController];
+    [FlutterNativePlugin registerWithRegistry:flutterViewController];
+    [FlutterNativePlugin registerWithRegistrar:[flutterViewController registrarForPlugin:@"FlutterNativePlugin"]];
+```
+
