@@ -48,30 +48,56 @@ maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
 }
 ```
 ```
-    FlutterViewController *flutterViewController = [[FlutterViewController alloc] init];
-    self.mUINavigationController = [[UINavigationController alloc] init];
-    [self.mUINavigationController pushViewController:flutterViewController animated:YES];
-    [GeneratedPluginRegistrant registerWithRegistry:flutterViewController];
-    [FlutterNativePlugin registerWithRegistry:flutterViewController];
-    [FlutterNativePlugin registerWithRegistrar:[flutterViewController registrarForPlugin:@"FlutterNativePlugin"]];
+  FlutterViewController *flutterViewController = [[FlutterViewController alloc] init];
+  self.mUINavigationController = [[UINavigationController alloc] init];
+  [self.mUINavigationController pushViewController:flutterViewController animated:YES];
+  [GeneratedPluginRegistrant registerWithRegistry:flutterViewController];
+  [FlutterNativePlugin registerWithRegistry:flutterViewController];
+  [FlutterNativePlugin registerWithRegistrar:[flutterViewController registrarForPlugin:@"FlutterNativePlugin"]];
 ```
 
 ## 4. android混合工程 找不到Flutter资源
 这是因为需要把Flutter工程里面的资源拷贝到主anndorid目录中，打开andorid工程下面的bulid.gradle 加入自动拷贝脚本
 ```
-android.applicationVariants.all { variant ->
-    // delete previous files first
-    delete "${buildDir}/intermediates/merged_assets/${variant.dirName}"
+  android.applicationVariants.all { variant ->
+      // delete previous files first
+      delete "${buildDir}/intermediates/merged_assets/${variant.dirName}"
 
-    variant.mergeAssets.doLast {
-        def sourceDir = "${buildDir}/../../../../build/jsb-default"
-        def resDir = "${outputDir}/res"
-        def flutterAssetsDir = "${buildDir}/../../../flutter_module/.android/Flutter/build/intermediates/flutter/${variant.dirName}/flutter_assets"
-        copy {
-            from "${flutterAssetsDir}"
-            into  "${buildDir}/intermediates/merged_assets/${variant.dirName}/out/flutter_assets"
-        }
-    }
-}
+      variant.mergeAssets.doLast {
+          def sourceDir = "${buildDir}/../../../../build/jsb-default"
+          def resDir = "${outputDir}/res"
+          def flutterAssetsDir = "${buildDir}/../../../flutter_module/.android/Flutter/build/intermediates/flutter/${variant.dirName}/flutter_assets"
+          copy {
+              from "${flutterAssetsDir}"
+              into  "${buildDir}/intermediates/merged_assets/${variant.dirName}/out/flutter_assets"
+          }
+      }
+  }
 ```
 
+## 5. android混合工程 Exception: MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+如果是flutter_module模式，则android同样需要和ios手动注册一下：
+```
+  implementation project(path: ':flutter')
+  implementation project(path: ':device_info')
+  implementation project(path: ':image_picker')
+  implementation project(path: ':launch_review')
+  implementation project(path: ':package_info')
+  implementation project(path: ':path_provider')
+  implementation project(path: ':permission_handler')
+  implementation project(path: ':shared_preferences')
+  implementation project(path: ':sqflite')
+  implementation project(path: ':url_launcher')
+  implementation project(path: ':webview_flutter')
+```
+```
+  flutterEngine.getPlugins().add(new io.flutter.plugins.imagepicker.ImagePickerPlugin());
+  com.iyaffle.launchreview.LaunchReviewPlugin.registerWith(shimPluginRegistry.registrarFor("com.iyaffle.launchreview.LaunchReviewPlugin"));
+  flutterEngine.getPlugins().add(new io.flutter.plugins.packageinfo.PackageInfoPlugin());
+  flutterEngine.getPlugins().add(new io.flutter.plugins.pathprovider.PathProviderPlugin());
+  flutterEngine.getPlugins().add(new com.baseflow.permissionhandler.PermissionHandlerPlugin());
+  flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());
+  flutterEngine.getPlugins().add(new com.tekartik.sqflite.SqflitePlugin());
+  flutterEngine.getPlugins().add(new io.flutter.plugins.urllauncher.UrlLauncherPlugin());
+  flutterEngine.getPlugins().add(new io.flutter.plugins.webviewflutter.WebViewFlutterPlugin());
+```
