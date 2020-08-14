@@ -56,3 +56,22 @@ maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
     [FlutterNativePlugin registerWithRegistrar:[flutterViewController registrarForPlugin:@"FlutterNativePlugin"]];
 ```
 
+## 4. android混合工程 找不到Flutter资源
+这是因为需要把Flutter工程里面的资源拷贝到主anndorid目录中，打开andorid工程下面的bulid.gradle 加入自动拷贝脚本
+```
+android.applicationVariants.all { variant ->
+    // delete previous files first
+    delete "${buildDir}/intermediates/merged_assets/${variant.dirName}"
+
+    variant.mergeAssets.doLast {
+        def sourceDir = "${buildDir}/../../../../build/jsb-default"
+        def resDir = "${outputDir}/res"
+        def flutterAssetsDir = "${buildDir}/../../../flutter_module/.android/Flutter/build/intermediates/flutter/${variant.dirName}/flutter_assets"
+        copy {
+            from "${flutterAssetsDir}"
+            into  "${buildDir}/intermediates/merged_assets/${variant.dirName}/out/flutter_assets"
+        }
+    }
+}
+```
+
