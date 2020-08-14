@@ -102,17 +102,19 @@ maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
   flutterEngine.getPlugins().add(new io.flutter.plugins.webviewflutter.WebViewFlutterPlugin());
 ```
 
-## 6.archive的时候报Bitcode bundle could not be generated because '/***/.ios/Flutter/engine/Flutter.framework/Flutter' was built without full bitcode. All frameworks and dylibs for bitcode must be generated from Xcode Archive 
+## 6.archive Bitcode 问题
+
+Bitcode bundle could not be generated because '/***/.ios/Flutter/engine/Flutter.framework/Flutter' was built without full bitcode. All frameworks and dylibs for bitcode must be generated from Xcode Archive 
 
 情形一：有时候时候我们需要将FlutterModule中的.ios工程中的Bitcode关掉就好了
-情形二：本情况适用于在情形一无效的情况下
-1、AS 终端执行flutter clean
-2、终端 Flutter build ios --release
-3、修改bundleid 和 证书及描述文件
-4、然后对.ios工程执行pod install，然后bitcode修改为no，然后archive
-5、.ios的工程archive没问题的话，再对native 项目执行pod install，bitcode修改为no，然后archive
 
-作者：张_何
-链接：https://www.jianshu.com/p/e46e7ba459e8
-来源：简书
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+情形二：本情况适用于在情形一无效的情况下
+
+1、修改 ios和.ios 项目bitcode修改为no
+
+2、终端 Flutter build ios --release
+
+3、然后对.ios工程执行pod install，然后bitcode修改为no，然后archive
+
+4、.ios的工程archive没问题的话，再对native 项目执行pod install，bitcode修改为no，然后archive
+
