@@ -107,6 +107,7 @@ maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
 Bitcode bundle could not be generated because '/***/.ios/Flutter/engine/Flutter.framework/Flutter' was built without full bitcode. All frameworks and dylibs for bitcode must be generated from Xcode Archive 
 
 情形一：有时候时候我们需要将FlutterModule中的.ios工程中的Bitcode关掉就好了
+
 情形二：本情况适用于在情形一无效的情况下
 
 1、修改 ios和.ios 项目bitcode修改为no
