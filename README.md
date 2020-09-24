@@ -112,7 +112,7 @@ Bitcode bundle could not be generated because '/***/.ios/Flutter/engine/Flutter.
 
 1、修改 ios和.ios 项目bitcode修改为no
 
-2、终端 Flutter build ios --release
+2、终端 flutter build ios --release
 
 3、然后对.ios工程执行pod install，然后bitcode修改为no，然后archive
 
